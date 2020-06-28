@@ -5,6 +5,7 @@ Backend server.
 import logging
 
 from flask import Flask
+from flask import jsonify
 from flask import render_template
 
 # Configure logging.
@@ -19,6 +20,9 @@ app = Flask(__name__)
 def index():
     return render_template('index.html.jinja')
 
+@app.route('/api/data')
+def data():
+    return jsonify({'data': 100})
 
 def main(args):
 
