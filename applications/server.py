@@ -7,6 +7,7 @@ import logging
 from flask import Flask
 from flask import jsonify
 from flask import render_template
+from flask import request
 
 # Configure logging.
 logging.basicConfig(filename='logs/server.log')
@@ -22,6 +23,13 @@ def index():
 
 @app.route('/api/data')
 def data():
+    return jsonify({'data': 100})
+
+@app.route('/api/company/new', methods=['POST'])
+def company():
+
+    data = request.json
+
     return jsonify({'data': 100})
 
 def main(args):

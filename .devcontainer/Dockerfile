@@ -59,7 +59,11 @@ RUN apt-get update \
     # Install Node
     # See https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions
     && curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - \
-    && sudo apt-get install -y nodejs
+    && sudo apt-get install -y nodejs \
+    #
+    # Install AWS CLI
+    && apt-get install -y awscli
+
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
