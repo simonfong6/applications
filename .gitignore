@@ -133,3 +133,6 @@ dmypy.json
 
 # VS Code
 **.vscode/
+
+# DynamoDB Local
+dynamo_db_local/dynamodb/*
