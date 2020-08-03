@@ -2,7 +2,7 @@ import React from 'react';
 
 import Company from '../Company';
 
-const TABLE_HEADERS = ['name', 'link'];
+const TABLE_HEADERS = ['Name', 'Link', 'Auto Generated Link'];
 
 class ListCompanies extends React.Component {
 

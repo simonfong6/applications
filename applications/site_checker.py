@@ -7,6 +7,8 @@ import requests
 GREENHOUSE_URL_TEMPLATE = "https://boards.greenhouse.io/{company}"
 LEVEL_URL_TEMPLATE = "https://jobs.lever.co/{company}"
 
+TEMPLATES = [GREENHOUSE_URL_TEMPLATE, LEVEL_URL_TEMPLATE]
+
 def normalize(company):
     return company.lower()
 
@@ -21,6 +23,18 @@ def on_greenhouse(company):
 
 def on_lever(company):
     return company_on_board(LEVEL_URL_TEMPLATE, company)
+
+def get_careers_page(company):
+    career_page_url = None
+
+    company = normalize(company)
+
+    for template in TEMPLATES:
+        if company_on_board(template, company):
+            career_page_url = template.format(company=company)
+            return career_page_url
+
+    return career_page_url
 
 class Class:
 

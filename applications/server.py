@@ -16,6 +16,8 @@ from markupsafe import escape
 
 from applications.dynamo_db import DynamoDB
 from applications.table import Table
+from applications.site_checker import get_careers_page
+
 
 # Configure logging.
 logging.basicConfig(filename='logs/server.log')
@@ -64,10 +66,13 @@ def company():
     table = Table('companies')
 
     name = data['company']
+
+    auto_link = get_careers_page(name)
     
     logger.info(f"Creating company: '{name}'")
     table.put({
-        'name': name
+        'name': name,
+        'auto_link': auto_link
     })
 
     company = table.get({
