@@ -33,7 +33,6 @@ class AddJobForm extends React.Component {
     const { data } = this.state;
 
     let msg = this.state.data.company;
-    console.log(msg);
 
     let url = `/api/company/new`;
 
@@ -41,7 +40,10 @@ class AddJobForm extends React.Component {
     .then(res => {
       console.log(res);
       console.log(res.data);
+      this.props.fetchCompanies();
     })
+
+    
   }
 
 
