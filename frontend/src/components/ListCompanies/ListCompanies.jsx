@@ -14,8 +14,6 @@ class ListCompanies extends React.Component {
 
     const { companies } = this.props;
 
-    console.log('Render');
-    console.log(companies);
     return (
       <div>
         <h2>Companies</h2>
