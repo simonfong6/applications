@@ -46,7 +46,6 @@ class AddJobForm extends React.Component {
 
 
   render() {
-    const { data } = this.state;
     return (
       <div>
         <h1>AddJobForm</h1>

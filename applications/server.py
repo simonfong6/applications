@@ -48,6 +48,20 @@ def company():
 
     return jsonify(company)
 
+
+@app.route('/api/companies')
+def get_companies():
+    companies = []
+
+    table = Table('companies')
+
+    request = table.table.scan()
+
+    companies = request['Items']
+
+    return jsonify(companies)
+
+
 def main(args):
 
     if args.debug:

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import AddJobForm from '../AddJobForm';
+import ListCompanies from '../ListCompanies';
 
 class Main extends React.Component {
 
@@ -28,6 +29,7 @@ class Main extends React.Component {
         <h1>Applications</h1>
         {data.data}
         <AddJobForm />
+        <ListCompanies />
       </div>
     );
   }
