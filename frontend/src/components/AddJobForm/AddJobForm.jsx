@@ -32,8 +32,6 @@ class AddJobForm extends React.Component {
 
     const { data } = this.state;
 
-    let msg = this.state.data.company;
-
     let url = `/api/company/new`;
 
     axios.post(url, data)
