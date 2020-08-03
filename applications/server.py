@@ -9,6 +9,9 @@ from flask import jsonify
 from flask import render_template
 from flask import request
 
+from applications.dynamo_db import DynamoDB
+from applications.table import Table
+
 # Configure logging.
 logging.basicConfig(filename='logs/server.log')
 logger = logging.getLogger(__name__)
@@ -30,7 +33,20 @@ def company():
 
     data = request.json
 
-    return jsonify({'data': 100})
+    table = Table('companies')
+
+    name = data['company']
+    
+    logger.info(f"Creating company: '{name}'")
+    table.put({
+        'name': name
+    })
+
+    company = table.get({
+        'name': name
+    })
+
+    return jsonify(company)
 
 def main(args):
 
