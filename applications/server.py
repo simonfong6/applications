@@ -88,12 +88,20 @@ def get_companies():
 
     table = Table('companies')
 
-    request = table.table.scan()
-
-    companies = request['Items']
+    companies = table.get_all()
 
     return jsonify(companies)
 
+
+@app.route('/api/companies/<company>', methods=['DELETE'])
+def delete_company(company):
+    table = Table('companies')
+
+    table.delete({
+        'name': company
+    })
+
+    return jsonify({'status': 'deleted'})
 
 def main(args):
 

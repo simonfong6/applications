@@ -41,11 +41,23 @@ class Table:
 
         return item
 
+    def get_all(self):
+        request = self.table.scan()
+
+        items = request['Items']
+
+        return items
+
     def update(self, key, update_expression, expression_attriubte_values):
         self.table.update_item(
             Key=key,
             UpdateExpression=update_expression,
             ExpressionAttributeValues=expression_attriubte_values
+        )
+
+    def delete(self, key):
+        response = self.table.delete_item(
+            Key=key
         )
 
 

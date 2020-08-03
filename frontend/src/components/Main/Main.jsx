@@ -54,7 +54,7 @@ class Main extends React.Component {
         />
         <ListCompanies
           companies={this.state.companies}
-          
+          fetchCompanies={this.fetchCompanies}
         />
       </div>
     );

@@ -38,6 +38,7 @@ class ListCompanies extends React.Component {
                 <Company
                   key={company.name}
                   company={ company }
+                  fetchCompanies={ this.props.fetchCompanies }
                 />
               ))
           }
