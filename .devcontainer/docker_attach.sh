@@ -1,7 +1,9 @@
-DIRECTORY_NAME="template-python-flask"
-IMAGE_NAME="domain.com.image"
-CONTAINER_NAME="domain.com..container"
-PORT="8000"
+DIRECTORY_NAME="applications"
+IMAGE_NAME="applications.mothakes.com.image"
+CONTAINER_NAME="applications.mothakes.com.container"
+HOST_PORT="3001"
+CONTAINER_PORT="3000"
+
 
 docker container run \
     -it \
@@ -10,5 +12,5 @@ docker container run \
     --user vscode \
     --mount type=bind,source=/home/ubuntu/Projects/$DIRECTORY_NAME,target=/workspace/$DIRECTORY_NAME \
     --workdir /workspace/$DIRECTORY_NAME \
-    --publish $PORT:$PORT \
+    --publish $HOST_PORT:$CONTAINER_PORT \
     $IMAGE_NAME /bin/bash && pip3 install -r requirements.txt

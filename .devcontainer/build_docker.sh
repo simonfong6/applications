@@ -1,1 +1,1 @@
-docker build -t domain.com.image .
+docker build -t applications.mothakes.com.image .
