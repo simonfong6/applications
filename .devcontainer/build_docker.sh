@@ -1,1 +1,1 @@
-docker build -t applications.mothakes.com.image .
+docker build -t applications.fyi.image .
