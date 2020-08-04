@@ -66,7 +66,7 @@ RUN apt-get update \
 
 # Install OpenJDK-8
 RUN apt-get update && \
-    apt-get install -y openjdk-8-jdk && \
+    apt-get install -y openjdk-11-jdk && \
     apt-get install -y ant && \
     apt-get clean;
 
