@@ -2,7 +2,7 @@ DIRECTORY_NAME="applications"
 IMAGE_NAME="applications.fyi.image"
 CONTAINER_NAME="applications.fyi.container"
 HOST_PORT="3001"
-CONTAINER_PORT="3000"
+CONTAINER_PORT="8000"
 
 
 docker container run \
