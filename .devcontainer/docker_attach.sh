@@ -10,7 +10,7 @@ docker container run \
     --rm \
     --name $CONTAINER_NAME \
     --user vscode \
-    --mount type=bind,source=/home/ubuntu/Projects/$DIRECTORY_NAME,target=/workspace/$DIRECTORY_NAME \
+    --mount type=bind,source=/home/ubuntu/projects/$DIRECTORY_NAME,target=/workspace/$DIRECTORY_NAME \
     --workdir /workspace/$DIRECTORY_NAME \
     --publish $HOST_PORT:$CONTAINER_PORT \
     $IMAGE_NAME /bin/bash && pip3 install -r requirements.txt
