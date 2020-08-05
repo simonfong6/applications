@@ -35,46 +35,70 @@ class DynamoDB:
             table_name,
             key_schema,
             attribute_definitions,
-            provisioned_throughput=None):
+            provisioned_throughput=None,
+            exists_ok=False):
         
         if not provisioned_throughput:
             provisioned_throughput = DynamoDB.DEFAULT_PROVISIONED_THROUGH_PUT
         
-        self.client.create_table(
-            TableName=table_name,
-            KeySchema=key_schema,
-            AttributeDefinitions=attribute_definitions,
-            ProvisionedThroughput=DynamoDB.DEFAULT_PROVISIONED_THROUGH_PUT
-        )
+        if exists_ok:
+            try:
+                self.client.create_table(
+                    TableName=table_name,
+                    KeySchema=key_schema,
+                    AttributeDefinitions=attribute_definitions,
+                    ProvisionedThroughput=DynamoDB.DEFAULT_PROVISIONED_THROUGH_PUT
+                )
+                print(f"Creating table '{table_name}'")
+            except self.client.exceptions.ResourceInUseException:
+                print(f"Table '{table_name}' exists")
+        else:
+            self.client.create_table(
+                TableName=table_name,
+                KeySchema=key_schema,
+                AttributeDefinitions=attribute_definitions,
+                ProvisionedThroughput=DynamoDB.DEFAULT_PROVISIONED_THROUGH_PUT
+            )
+            print(f"Creating table '{table_name}'")
 
 def main():
 
-    dynamo = DynamoDB(local=True, port=8001)
+    dynamo = DynamoDB()
     
-    try:
-        # Create the DynamoDB table.
-        dynamo.create_table(
-            table_name='companies',
-            key_schema=[
-                {
-                    'AttributeName': 'name',
-                    'KeyType': 'HASH'
-                },
-            ],
-            attribute_definitions=[
-                {
-                    'AttributeName': 'name',
-                    'AttributeType': 'S'
-                },
-            ]
-        )
+    # Create the DynamoDB table.
+    dynamo.create_table(
+        table_name='companies',
+        key_schema=[
+            {
+                'AttributeName': 'name',
+                'KeyType': 'HASH'
+            },
+        ],
+        attribute_definitions=[
+            {
+                'AttributeName': 'name',
+                'AttributeType': 'S'
+            },
+        ],
+        exists_ok=True
+    )
 
-        # Wait until the table exists.
-        # table.meta.client.get_waiter('table_exists').wait(TableName='users')
-
-    except dynamo.client.exceptions.ResourceInUseException:
-        # do something here as you require
-        pass
+    dynamo.create_table(
+        table_name='users',
+        key_schema=[
+            {
+                'AttributeName': 'uuid',
+                'KeyType': 'HASH'
+            },
+        ],
+        attribute_definitions=[
+            {
+                'AttributeName': 'uuid',
+                'AttributeType': 'S'
+            },
+        ],
+        exists_ok=True
+    )
 
 
 if __name__ == '__main__':
