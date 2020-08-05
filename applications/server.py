@@ -5,6 +5,8 @@ Backend server.
 import logging
 import os
 
+from bcrypt import gensalt
+from bcrypt import hashpw
 from flask import Flask
 from flask import jsonify
 from flask import redirect
@@ -17,6 +19,7 @@ from markupsafe import escape
 from applications.dynamo_db import DynamoDB
 from applications.table import Table
 from applications.site_checker import get_careers_page
+from applications.user import User
 
 
 # Configure logging.
@@ -28,6 +31,41 @@ app = Flask(__name__)
 
 # Set the secret key to some random bytes. Keep this really secret!
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
+
+@app.route('/api/users/new', methods=['POST'])
+def create_user():
+
+    data = request.json
+
+    print(data)
+
+    email = data['email']
+    password = data['password']
+
+    salt = gensalt()
+
+    password = password.encode('utf-8')
+
+    password_hash = hashpw(password, salt).decode('utf-8')
+    
+    uuid = User.create_uuid()
+
+    user = {
+        'uuid': uuid,
+        'salt': salt.decode('utf-8'),
+        'email': email,
+        'hash': password_hash
+
+    }
+
+    print(data)
+    print(user)
+
+    table = Table('users')
+
+    table.put(user)
+
+    return jsonify(user)
 
 
 @app.route('/')

@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import AddJobForm from '../AddJobForm';
 import ListCompanies from '../ListCompanies';
+import SignUp from '../SignUp';
 
 
 class Main extends React.Component {
@@ -52,6 +53,7 @@ class Main extends React.Component {
         <AddJobForm
           fetchCompanies={this.fetchCompanies}
         />
+        <SignUp />
         <ListCompanies
           companies={this.state.companies}
           fetchCompanies={this.fetchCompanies}

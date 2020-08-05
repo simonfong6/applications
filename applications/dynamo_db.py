@@ -90,10 +90,18 @@ def main():
                 'AttributeName': 'uuid',
                 'KeyType': 'HASH'
             },
+            {
+                'AttributeName': 'email',
+                'KeyType': 'RANGE'
+            },
         ],
         attribute_definitions=[
             {
                 'AttributeName': 'uuid',
+                'AttributeType': 'S'
+            },
+            {
+                'AttributeName': 'email',
                 'AttributeType': 'S'
             },
         ],
