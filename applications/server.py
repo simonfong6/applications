@@ -37,8 +37,6 @@ def create_user():
 
     data = request.json
 
-    print(data)
-
     email = data['email']
     password = data['password']
 
@@ -58,8 +56,7 @@ def create_user():
 
     }
 
-    print(data)
-    print(user)
+    logger.info(f"Creating user :'{user}'")
 
     table = Table('users')
 
