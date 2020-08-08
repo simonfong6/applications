@@ -4,8 +4,6 @@ Blueprint
 """
 import logging
 
-from bcrypt import gensalt
-from bcrypt import hashpw
 from flask import Blueprint
 from flask import jsonify
 from flask import redirect
