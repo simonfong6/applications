@@ -15,10 +15,11 @@ setup(
     url="https://github.com/simonfong6/applications",
     packages=find_packages(),
     install_requires=[
-        'flask >= 1.1.1',
+        'bcrypt >= 3.1.7',
         'boto3 >= 1.12.0',
-        'requests >= 2.24.0'
-        'bcrypt >= 3.1.7'
+        'flask >= 1.1.1',
+        'flask-cors >= 3.0.8'
+        'requests >= 2.24.0',
     ],
     python_requires='>=3.6',
     classifiers=[
