@@ -24,11 +24,12 @@ logger.setLevel(logging.INFO)
 users = Blueprint('users', __name__)
 
 
+table = Table('users')
+
+
 @users.route('/')
 def index():
     users = []
-
-    table = Table('users')
 
     users = table.get_all()
 
@@ -43,6 +44,19 @@ def create():
     email = data['email']
     password = data['password']
 
+    user = table.get({
+        'email': email
+    })
+
+    logger.info(f'User: {user}')
+
+    if user:
+        return jsonify({
+            'error': 'User with that email already exists.',
+            'msg': 'User already exists, please login in.'
+        })
+
+
     salt, hashcode = generate(password)
     
     uuid = User.create_uuid()
@@ -56,8 +70,6 @@ def create():
     }
 
     logger.info(f"Creating user :'{user}'")
-
-    table = Table('users')
 
     table.put(user)
 
@@ -81,8 +93,6 @@ def current():
         )
 
     email = session[email_key]
-
-    table = Table('users')
 
     user = table.get({
         'email': email

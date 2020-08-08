@@ -2,7 +2,13 @@
 """
 Table
 """
+import logging
+
 import boto3
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class Table:
@@ -37,7 +43,9 @@ class Table:
             Key=key
         )
 
-        item = response['Item']
+        logger.info(f"Response: {response}")
+
+        item = response.get('Item', None)
 
         return item
 
