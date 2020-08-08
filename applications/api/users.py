@@ -13,6 +13,8 @@ from flask import request
 from flask import session
 from flask import url_for
 
+from applications.authentication import generate
+from applications.authentication import match
 from applications.table import Table
 from applications.user import User
 
@@ -43,19 +45,15 @@ def create():
     email = data['email']
     password = data['password']
 
-    salt = gensalt()
-
-    password = password.encode('utf-8')
-
-    password_hash = hashpw(password, salt).decode('utf-8')
+    salt, hashcode = generate(password)
     
     uuid = User.create_uuid()
 
     user = {
         'uuid': uuid,
-        'salt': salt.decode('utf-8'),
+        'salt': salt,
         'email': email,
-        'hash': password_hash
+        'hash': hashcode
 
     }
 
@@ -74,25 +72,48 @@ def create():
 #         return 'Logged in as %s' % escape(session['username'])
 #     return 'You are not logged in'
 
+@users.route('/current')
+def current():
 
-@users.route('/login', methods=['GET', 'POST'])
+    email_key = 'email'
+
+    if email_key not in session:
+        return jsonify(
+            status='No user'
+        )
+
+    email = session[email_key]
+
+    table = Table('users')
+
+    user = table.get({
+        'email': email
+    })
+
+    return jsonify(user)
+
+
+@users.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        session['username'] = request.form['username']
-        return redirect(url_for('index'))
-    return '''
-        <form method="post">
-            <p><input type=text name=username>
-            <p><input type=submit value=Login>
-        </form>
-    '''
+
+    if request.json:
+        data = request.json
+        print(data)
+
+    email = 'key@gmail.com'
+    logger.info(f"Logging in email: '{email}'")
+
+    session['email'] = email
+    return redirect(url_for('users.current'))
 
 
 @users.route('/logout')
 def logout():
     # remove the username from the session if it's there
-    session.pop('username', None)
-    return redirect(url_for('index'))
+    session.pop('email', None)
+    return jsonify({
+        'status': 'Logged Out'
+    })
 
 
 def main(args):
