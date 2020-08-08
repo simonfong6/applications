@@ -19,10 +19,13 @@ logger.setLevel(logging.INFO)
 app = Flask(__name__)
 
 
+FRONTEND_PROXY = 'http://localhost:3000'
+
+
 def setup(app):
 
     # Cors to allow proxy from React app.
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, resources={r"/api/*": {"origins": FRONTEND_PROXY}})
 
     # Register routes.
     register_sub_site(app)
