@@ -87,19 +87,11 @@ def main():
         table_name='users',
         key_schema=[
             {
-                'AttributeName': 'uuid',
-                'KeyType': 'HASH'
-            },
-            {
                 'AttributeName': 'email',
-                'KeyType': 'RANGE'
+                'KeyType': 'HASH'
             },
         ],
         attribute_definitions=[
-            {
-                'AttributeName': 'uuid',
-                'AttributeType': 'S'
-            },
             {
                 'AttributeName': 'email',
                 'AttributeType': 'S'
