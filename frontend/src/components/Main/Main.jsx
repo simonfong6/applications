@@ -4,6 +4,7 @@ import axios from 'axios';
 import AddJobForm from '../AddJobForm';
 import ListCompanies from '../ListCompanies';
 import LogIn from '../LogIn';
+import Logout from '../Logout';
 import SignUp from '../SignUp';
 
 
@@ -33,10 +34,24 @@ class Main extends React.Component {
     .then(data => this.setState({data: data}));
 
     this.fetchCompanies();
+    this.fetchUser();
+  }
+
+  fetchUser() {
+    const url = '/api/users/current';
+    axios.get(url)
+    .then(resp => {
+      const data = resp.data;
+      console.log(data);
+
+      // Has email means user object.
+      if (data.email) {
+        this.setUser(data);
+      }
+    });
   }
 
   setUser(user) {
-    console.log(`Setting user: ${user.email}`);
     console.log(user);
     this.setState({
       user
@@ -63,7 +78,7 @@ class Main extends React.Component {
 
     let sessionComponents = null;
 
-    if (user) {
+    if (!user) {
       sessionComponents = (
         <div>
           <SignUp />
@@ -72,6 +87,8 @@ class Main extends React.Component {
           />
         </div>
       );
+    } else {
+      sessionComponents = <Logout setUser={this.setUser} />;
     }
 
     return (
@@ -81,7 +98,7 @@ class Main extends React.Component {
         <AddJobForm
           fetchCompanies={this.fetchCompanies}
         />
-        
+        {sessionComponents}
         <ListCompanies
           companies={this.state.companies}
           fetchCompanies={this.fetchCompanies}

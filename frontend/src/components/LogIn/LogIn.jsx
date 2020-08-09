@@ -59,12 +59,12 @@ class LogIn extends React.Component {
         <h2>LogIn</h2>
         <form>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="emailLogin">Email</label>
             <input
               type="email"
               className="form-control"
               placeholder="Email"
-              id="email"
+              id="emailLogin"
               value={ email }
               onChange={ (event) => this.onChange('email', event) }
             />
