@@ -4,9 +4,6 @@ import axios from 'axios';
 import onChange from '../../util/onChange';
 
 
-axios.defaults.withCredentials = true
-
-
 class LogIn extends React.Component {
 
   constructor(props) {
@@ -46,6 +43,8 @@ class LogIn extends React.Component {
       axios.get(url)
       .then(resp => {
         console.log(resp.data);
+        const user = resp.data;
+        this.props.setUser(user);
       });
     });
 

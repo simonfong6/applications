@@ -19,10 +19,12 @@ class Main extends React.Component {
       data: {
         data: -1
       },
-      companies: []
+      companies: [],
+      user: null
     }
 
     this.fetchCompanies = this.fetchCompanies.bind(this);
+    this.setUser = this.setUser.bind(this);
   }
 
   componentDidMount() {
@@ -31,6 +33,14 @@ class Main extends React.Component {
     .then(data => this.setState({data: data}));
 
     this.fetchCompanies();
+  }
+
+  setUser(user) {
+    console.log(`Setting user: ${user.email}`);
+    console.log(user);
+    this.setState({
+      user
+    });
   }
 
   fetchCompanies() {
@@ -49,7 +59,21 @@ class Main extends React.Component {
   }
 
   render() {
-    const { data } = this.state;
+    const { data, user } = this.state;
+
+    let sessionComponents = null;
+
+    if (user) {
+      sessionComponents = (
+        <div>
+          <SignUp />
+          <LogIn
+            setUser={this.setUser}
+          />
+        </div>
+      );
+    }
+
     return (
       <div className="container">
         <h1>Applications</h1>
@@ -57,8 +81,7 @@ class Main extends React.Component {
         <AddJobForm
           fetchCompanies={this.fetchCompanies}
         />
-        <SignUp />
-        <LogIn />
+        
         <ListCompanies
           companies={this.state.companies}
           fetchCompanies={this.fetchCompanies}
