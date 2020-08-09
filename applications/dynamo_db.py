@@ -100,6 +100,23 @@ def main():
         exists_ok=True
     )
 
+    dynamo.create_table(
+        table_name='jobs',
+        key_schema=[
+            {
+                'AttributeName': 'uuid',
+                'KeyType': 'HASH'
+            },
+        ],
+        attribute_definitions=[
+            {
+                'AttributeName': 'uuid',
+                'AttributeType': 'S'
+            },
+        ],
+        exists_ok=True
+    )
+
 
 if __name__ == '__main__':
     main()
