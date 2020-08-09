@@ -3,7 +3,11 @@ import axios from 'axios';
 
 import AddJobForm from '../AddJobForm';
 import ListCompanies from '../ListCompanies';
+import LogIn from '../LogIn';
 import SignUp from '../SignUp';
+
+
+axios.defaults.withCredentials = true
 
 
 class Main extends React.Component {
@@ -54,6 +58,7 @@ class Main extends React.Component {
           fetchCompanies={this.fetchCompanies}
         />
         <SignUp />
+        <LogIn />
         <ListCompanies
           companies={this.state.companies}
           fetchCompanies={this.fetchCompanies}

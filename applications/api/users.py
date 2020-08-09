@@ -76,15 +76,10 @@ def create():
     return jsonify(user)
 
 
-# @users.route('/')
-# def index():
-#     if 'username' in session:
-#         return 'Logged in as %s' % escape(session['username'])
-#     return 'You are not logged in'
-
 @users.route('/current')
 def current():
 
+    logger.info(f"Session: {session}")
     email_key = 'email'
 
     if email_key not in session:
@@ -98,6 +93,10 @@ def current():
         'email': email
     })
 
+    # Remove sensitive data.
+    del user['salt']
+    del user['hash']
+
     return jsonify(user)
 
 
@@ -106,13 +105,42 @@ def login():
 
     if request.json:
         data = request.json
-        print(data)
+        logger.info(data)
 
-    email = 'key@gmail.com'
+    email = data['email']
+    password = data['password']
     logger.info(f"Logging in email: '{email}'")
 
+    user = table.get({
+        'email': email
+    })
+
+    if not user:
+        logger.info(f"User '{email}' does not exist.")
+        return jsonify({
+            'status': 'Failed',
+            'msg': 'Email not found, please signup.'
+        })
+    
+    salt = user['salt']
+    hashcode = user['hash']
+
+    if not match(password, salt, hashcode):
+        logger.info('Login failed.')
+        return jsonify({
+            'status': 'Failed',
+            'msg': 'Incorrect password.'
+        })
+
+    logger.info('Login successful.')
+
     session['email'] = email
-    return redirect(url_for('users.current'))
+
+    logger.info(f'Added email to session {session["email"]}')
+    return jsonify({
+        'status': 'success',
+        'msg': 'Login successful.'
+    })
 
 
 @users.route('/logout')

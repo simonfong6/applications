@@ -25,7 +25,11 @@ FRONTEND_PROXY = 'http://localhost:3000'
 def setup(app):
 
     # Cors to allow proxy from React app.
-    CORS(app, resources={r"/api/*": {"origins": FRONTEND_PROXY}})
+    CORS(
+        app,
+        resources={r"/api/*": {"origins": FRONTEND_PROXY}},
+        supports_credentials=True
+    )
 
     # Register routes.
     register_sub_site(app)
