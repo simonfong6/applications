@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import AddJobForm from '../AddJobForm';
+import AddCompany from '../AddCompany';
 import ListCompanies from '../ListCompanies';
 import LogIn from '../LogIn';
 import Logout from '../Logout';
@@ -95,7 +95,7 @@ class Main extends React.Component {
       <div className="container">
         <h1>Applications</h1>
         {data.data}
-        <AddJobForm
+        <AddCompany
           fetchCompanies={this.fetchCompanies}
         />
         {sessionComponents}

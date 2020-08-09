@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 
-class AddJobForm extends React.Component {
+class AddCompany extends React.Component {
 
   constructor(props) {
     super(props);
@@ -48,7 +48,7 @@ class AddJobForm extends React.Component {
   render() {
     return (
       <div>
-        <h1>AddJobForm</h1>
+        <h1>AddCompany</h1>
         <form>
           <div className="form-group">
             <label htmlFor="company">Company</label>
@@ -74,4 +74,4 @@ class AddJobForm extends React.Component {
 
 }
 
-export default AddJobForm;
+export default AddCompany;
