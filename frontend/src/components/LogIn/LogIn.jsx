@@ -66,7 +66,7 @@ class LogIn extends React.Component {
               placeholder="Email"
               id="emailLogin"
               value={ email }
-              onChange={ (event) => this.onChange('email', event) }
+              onChange={ (event) => this.onChange(event, 'email') }
             />
             <h5 className='text-danger'>{ message }</h5>
             <label htmlFor="password">Password</label>
@@ -76,7 +76,7 @@ class LogIn extends React.Component {
               id="password"
               placeholder="Password"
               value={ password }
-              onChange={ (event) => this.onChange('password', event) }
+              onChange={ (event) => this.onChange(event, 'password') }
             />
           </div>
           <button

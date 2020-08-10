@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 import AddCompany from '../AddCompany';
+import AddJobForm from '../AddJobForm';
 import ListCompanies from '../ListCompanies';
 import LogIn from '../LogIn';
 import Logout from '../Logout';
@@ -17,11 +18,9 @@ class Main extends React.Component {
     super(props);
 
     this.state = {
-      data: {
-        data: -1
-      },
+      user: null,
       companies: [],
-      user: null
+      jobs: [],
     }
 
     this.fetchCompanies = this.fetchCompanies.bind(this);
@@ -29,9 +28,6 @@ class Main extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/data')
-    .then(resp => resp.json())
-    .then(data => this.setState({data: data}));
 
     this.fetchCompanies();
     this.fetchUser();
@@ -74,7 +70,7 @@ class Main extends React.Component {
   }
 
   render() {
-    const { data, user } = this.state;
+    const { user, companies } = this.state;
 
     let sessionComponents = null;
 
@@ -94,9 +90,11 @@ class Main extends React.Component {
     return (
       <div className="container">
         <h1>Applications</h1>
-        {data.data}
         <AddCompany
           fetchCompanies={this.fetchCompanies}
+        />
+        <AddJobForm
+          companies={ companies }
         />
         {sessionComponents}
         <ListCompanies

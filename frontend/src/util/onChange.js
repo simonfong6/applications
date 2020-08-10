@@ -1,4 +1,4 @@
-function onChange(property, event) {
+function onChange(event, property) {
   const value = event.target.value;
 
   const state = {};
