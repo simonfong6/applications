@@ -1,8 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { MdContentCopy } from 'react-icons/md';
 import { MdDelete } from 'react-icons/md';
-import { FcCheckmark } from 'react-icons/fc';
 
 import Clipboard from '../Clipboard';
 

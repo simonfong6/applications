@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Clipboard from '../Clipboard';
+
 
 class ListJobItem extends React.Component {
 
@@ -23,6 +25,9 @@ class ListJobItem extends React.Component {
           >
             { role }
           </a>
+          <Clipboard
+            value={ url }
+          />
         </td>
         <td>
           { type }
