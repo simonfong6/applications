@@ -4,6 +4,7 @@ import axios from 'axios';
 import AddCompany from '../AddCompany';
 import AddJobForm from '../AddJobForm';
 import ListCompanies from '../ListCompanies';
+import ListJobs from '../ListJobs';
 import LogIn from '../LogIn';
 import Logout from '../Logout';
 import SignUp from '../SignUp';
@@ -24,6 +25,7 @@ class Main extends React.Component {
     }
 
     this.fetchCompanies = this.fetchCompanies.bind(this);
+    this.fetchJobs = this.fetchJobs.bind(this);
     this.setUser = this.setUser.bind(this);
   }
 
@@ -31,6 +33,7 @@ class Main extends React.Component {
 
     this.fetchCompanies();
     this.fetchUser();
+    this.fetchJobs();
   }
 
   fetchUser() {
@@ -69,8 +72,22 @@ class Main extends React.Component {
 
   }
 
+  fetchJobs() {
+    console.log('Fetching jobs');
+    let url = `/api/jobs`;
+
+    axios.get(url)
+    .then(res => {
+      // console.log(res.data);
+      const jobs = res.data;
+      this.setState({
+        jobs
+      });
+    });
+  }
+
   render() {
-    const { user, companies } = this.state;
+    const { user, companies, jobs } = this.state;
 
     let sessionComponents = null;
 
@@ -98,8 +115,12 @@ class Main extends React.Component {
         />
         {sessionComponents}
         <ListCompanies
-          companies={this.state.companies}
+          companies={ companies }
           fetchCompanies={this.fetchCompanies}
+        />
+        <ListJobs
+          jobs={ jobs }
+          fetchJobs={ this.fetchJobs }
         />
       </div>
     );
