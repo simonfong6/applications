@@ -32,7 +32,7 @@ class AddCompany extends React.Component {
 
     const { data } = this.state;
 
-    let url = `/api/company/new`;
+    let url = `/api/companies/new`;
 
     axios.post(url, data)
     .then(res => {
