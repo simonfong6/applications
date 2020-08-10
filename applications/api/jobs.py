@@ -20,6 +20,7 @@ jobs = Blueprint('jobs', __name__)
 
 
 table = Table('jobs')
+companies_table = Table('companies')
 
 
 @jobs.route('/')
@@ -27,6 +28,21 @@ def index():
     jobs = []
 
     jobs = table.get_all()
+
+    # Attach company info to job.
+    for job in jobs:
+        company_name = job['company']
+
+        company = companies_table.get({
+            'name': company_name
+        })
+
+        url = company.get('auto_link', '')
+        
+        job['company'] = {
+            'name': company_name,
+            'url': url,
+        } 
 
     return jsonify(jobs)
 

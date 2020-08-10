@@ -17,7 +17,11 @@ class ListJobItem extends React.Component {
     return (
       <tr>
         <td>
-          { company }
+          <a
+            href={ company.url }
+          >
+            { company.name }
+          </a>
         </td>
         <td>
           <a
