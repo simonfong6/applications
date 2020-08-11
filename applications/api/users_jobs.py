@@ -77,6 +77,42 @@ def create():
     return jsonify(user_job.json())
 
 
+@users_jobs.route('/update', methods=['POST'])
+def update():
+    if 'email' not in session:
+        return jsonify({
+            'status': 'Not Signed In',
+            'msg': 'Please sign in.'
+        })
+
+    email = session['email']
+
+    user = users_table.get({
+        'email': email
+    })
+
+
+    data = request.json
+
+    user_job_uuid = data['uuid']
+
+    user_job = UserJob.get({
+        'user_uuid': user['uuid'],
+        'uuid': user_job_uuid
+    })
+
+    status = data['status']
+
+    if status == 'Applied':
+        user_job.timestamp_applied = UserJob.create_timestamp()
+
+    user_job.status = status
+
+    user_job.save()
+
+    return jsonify(user_job.json())
+
+
 class Class:
 
     def __init__(self):

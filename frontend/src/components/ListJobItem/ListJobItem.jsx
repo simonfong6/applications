@@ -24,7 +24,8 @@ class ListJobItem extends React.Component {
     .then(res => {
       console.log(res);
       console.log(res.data);
-      // this.props.fetchCompanies();
+
+      this.props.fetchUserJobs();
     })
   }
 

@@ -9,6 +9,7 @@ from boto3.dynamodb.conditions import Key
 
 from applications.table import Table
 from applications.database.timestamp import micros
+from applications.database.unique_id import create_uuid
 
 
 logger = logging.getLogger(__name__)
@@ -26,6 +27,7 @@ class UserJob:
 
     def __init__(self):
         super().__init__()
+        self.uuid = None
         self.timestamp = None
         self.user_uuid = None
         self.job_uuid = None
@@ -42,6 +44,7 @@ class UserJob:
 
     def json(self):
         data = {
+            'uuid': self.uuid,
             'user_uuid': self.user_uuid,
             'timestamp': self.timestamp,
             'job_uuid': self.job_uuid,
@@ -56,6 +59,11 @@ class UserJob:
             'timestamp_offer_accepted': self.timestamp_offer_accepted,
             'timestamp_offer_rejected': self.timestamp_offer_rejected,
         }
+
+         # Convert decimals to ints.
+        for key, value in data.items():
+            if isinstance(value, Decimal):
+                data[key] = int(value)
 
         return data
 
@@ -76,6 +84,9 @@ class UserJob:
         if not self.timestamp:
             self.timestamp = micros()
 
+        if not self.uuid:
+            self.uuid = create_uuid()
+
         data = self.json()
 
         table.put(data)
@@ -85,14 +96,18 @@ class UserJob:
 
         user_job = UserJob()
 
-        for key, value in data:
+        for key, value in data.items():
             setattr(user_job, key, value)
 
         return user_job
 
     @staticmethod
     def get(key):
-        return table.get(key)
+        user_job = table.get(key)
+
+        if user_job:
+            user_job = UserJob.build(user_job)
+        return user_job
 
     @staticmethod
     def all():
@@ -143,6 +158,10 @@ class UserJob:
             logger.info(user_job)
 
         return user_jobs
+
+    @staticmethod
+    def create_timestamp():
+        return micros()
 
 
 def main(args):

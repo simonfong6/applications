@@ -126,7 +126,7 @@ def main():
                 'KeyType': 'HASH'
             },
             {
-                'AttributeName': 'timestamp',
+                'AttributeName': 'uuid',
                 'KeyType': 'RANGE'
             },
         ],
@@ -136,8 +136,8 @@ def main():
                 'AttributeType': 'S',
             },
             {
-                'AttributeName': 'timestamp',
-                'AttributeType': NUMBER,
+                'AttributeName': 'uuid',
+                'AttributeType': 'S',
             },
         ],
         exists_ok=True

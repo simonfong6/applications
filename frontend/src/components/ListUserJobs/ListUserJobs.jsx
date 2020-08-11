@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ListJobItem from '../ListJobItem';
+import ListUserJobItem from '../ListUserJobItem';
 
 import UserJobsContext from '../../contexts/UserJobsContext';
 
@@ -9,10 +9,11 @@ const TABLE_HEADERS = [
   'Company',
   'Role',
   'Type',
+  'Status',
 ];
 
 
-class ListJobs extends React.Component {
+class ListUserJobs extends React.Component {
 
   constructor(props) {
     super(props);
@@ -20,11 +21,11 @@ class ListJobs extends React.Component {
 
   render() {
 
-    const { jobs } = this.props;
+    const { userJobs } = this.props;
 
     return (
       <div>
-        <h2>ListJobs</h2>
+        <h2>ListUserJobs</h2>
         <table className="table">
           <thead>
             <tr>
@@ -42,15 +43,13 @@ class ListJobs extends React.Component {
           </thead>
           <tbody>
             {
-              jobs.map(job => (
+              userJobs.map(userJob => (
                 <UserJobsContext.Consumer
-                  key={job.uuid}
+                  key={userJob.uuid}
                 >
                   {({ fetchUserJobs }) => (
-                    <ListJobItem
-                      key={job.uuid}
-                      job={ job }
-                      fetchJobs={ this.props.fetchJobs }
+                    <ListUserJobItem
+                      userJob={ userJob }
                       fetchUserJobs={ fetchUserJobs }
                     />
                   )}
@@ -65,4 +64,4 @@ class ListJobs extends React.Component {
 
 }
 
-export default ListJobs;
+export default ListUserJobs;

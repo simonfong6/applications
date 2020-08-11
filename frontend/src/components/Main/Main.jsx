@@ -5,9 +5,12 @@ import AddCompany from '../AddCompany';
 import AddJobForm from '../AddJobForm';
 import ListCompanies from '../ListCompanies';
 import ListJobs from '../ListJobs';
+import ListUserJobs from '../ListUserJobs';
 import LogIn from '../LogIn';
 import Logout from '../Logout';
 import SignUp from '../SignUp';
+
+import UserJobsContext from '../../contexts/UserJobsContext';
 
 
 axios.defaults.withCredentials = true
@@ -36,10 +39,12 @@ class Main extends React.Component {
     this.fetchCompanies();
     this.fetchUser();
     this.fetchJobs();
+    this.fetchUserJobs();
   }
 
   fetchUser() {
-    const url = '/api/users/current';
+    console.log(window.location);
+    let url = '/api/users/current';
     axios.get(url)
     .then(resp => {
       const data = resp.data;
@@ -61,7 +66,7 @@ class Main extends React.Component {
 
   fetchCompanies() {
     console.log('Fetching companies');
-    let url = `/api/companies`;
+    const url = '/api/companies/';
 
     axios.get(url)
     .then(res => {
@@ -76,7 +81,7 @@ class Main extends React.Component {
 
   fetchJobs() {
     console.log('Fetching jobs');
-    let url = `/api/jobs`;
+    let url = `/api/jobs/`;
 
     axios.get(url)
     .then(res => {
@@ -90,20 +95,24 @@ class Main extends React.Component {
 
   fetchUserJobs() {
     console.log('Fetching user jobs');
-    let url = `/api/users/jobs`;
+    const url = '/api/users/jobs/';
 
     axios.get(url)
     .then(res => {
-      // console.log(res.data);
       const userJobs = res.data;
-      this.setState({
-        userJobs
-      });
+      console.log(userJobs);
+
+      if (!userJobs.status){
+        this.setState({
+          userJobs
+        });
+      }
+      
     });
   }
 
   render() {
-    const { user, companies, jobs } = this.state;
+    const { user, companies, jobs, userJobs } = this.state;
 
     let sessionComponents = null;
 
@@ -121,24 +130,29 @@ class Main extends React.Component {
     }
 
     return (
-      <div className="container">
-        <h1>Applications</h1>
-        <AddCompany
-          fetchCompanies={this.fetchCompanies}
-        />
-        <AddJobForm
-          companies={ companies }
-        />
-        {sessionComponents}
-        <ListCompanies
-          companies={ companies }
-          fetchCompanies={this.fetchCompanies}
-        />
-        <ListJobs
-          jobs={ jobs }
-          fetchJobs={ this.fetchJobs }
-        />
-      </div>
+      <UserJobsContext.Provider value={{fetchUserJobs: this.fetchUserJobs}}>
+        <div className="container">
+          <h1>Applications</h1>
+          <AddCompany
+            fetchCompanies={this.fetchCompanies}
+          />
+          <AddJobForm
+            companies={ companies }
+          />
+          {sessionComponents}
+          <ListCompanies
+            companies={ companies }
+            fetchCompanies={this.fetchCompanies}
+          />
+          <ListJobs
+            jobs={ jobs }
+            fetchJobs={ this.fetchJobs }
+          />
+          <ListUserJobs
+            userJobs={ userJobs }
+          />
+        </div>
+      </UserJobsContext.Provider>
     );
   }
 
