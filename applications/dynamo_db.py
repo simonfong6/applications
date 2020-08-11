@@ -3,6 +3,7 @@
 DynamoDB
 """
 import boto3
+from boto3.dynamodb.types import NUMBER
 
 
 class DynamoDB:
@@ -112,6 +113,31 @@ def main():
             {
                 'AttributeName': 'uuid',
                 'AttributeType': 'S'
+            },
+        ],
+        exists_ok=True
+    )
+
+    dynamo.create_table(
+        table_name='user_jobs',
+        key_schema=[
+            {
+                'AttributeName': 'userUuid',
+                'KeyType': 'HASH'
+            },
+            {
+                'AttributeName': 'timestamp',
+                'KeyType': 'RANGE'
+            },
+        ],
+        attribute_definitions=[
+            {
+                'AttributeName': 'userUuid',
+                'AttributeType': 'S',
+            },
+            {
+                'AttributeName': 'timestamp',
+                'AttributeType': NUMBER,
             },
         ],
         exists_ok=True
