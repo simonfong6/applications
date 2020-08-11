@@ -119,10 +119,10 @@ def main():
     )
 
     dynamo.create_table(
-        table_name='user_jobs',
+        table_name='users_jobs',
         key_schema=[
             {
-                'AttributeName': 'userUuid',
+                'AttributeName': 'user_uuid',
                 'KeyType': 'HASH'
             },
             {
@@ -132,7 +132,7 @@ def main():
         ],
         attribute_definitions=[
             {
-                'AttributeName': 'userUuid',
+                'AttributeName': 'user_uuid',
                 'AttributeType': 'S',
             },
             {

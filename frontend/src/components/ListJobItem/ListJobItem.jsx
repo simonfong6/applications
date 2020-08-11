@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+import { GoPlus } from "react-icons/go";
 
 import Clipboard from '../Clipboard';
 
@@ -7,6 +9,23 @@ class ListJobItem extends React.Component {
 
   constructor(props) {
     super(props);
+  }
+
+  addJob = (uuid) => {
+    console.log(`Adding job: ${uuid}`)
+
+    const data = {
+      uuid
+    };
+
+    let endpoint = `/api/users/jobs/new`;
+
+    axios.post(endpoint, data)
+    .then(res => {
+      console.log(res);
+      console.log(res.data);
+      // this.props.fetchCompanies();
+    })
   }
 
   render() {
@@ -35,6 +54,15 @@ class ListJobItem extends React.Component {
         </td>
         <td>
           { type }
+        </td>
+        <td>
+          <span
+            className='pointer'
+          >
+            <GoPlus
+              onClick={ () => this.addJob(uuid) }
+            />
+          </span>
         </td>
       </tr>
     );

@@ -22,10 +22,12 @@ class Main extends React.Component {
       user: null,
       companies: [],
       jobs: [],
+      userJobs: [],
     }
 
     this.fetchCompanies = this.fetchCompanies.bind(this);
     this.fetchJobs = this.fetchJobs.bind(this);
+    this.fetchUserJobs = this.fetchUserJobs.bind(this);
     this.setUser = this.setUser.bind(this);
   }
 
@@ -82,6 +84,20 @@ class Main extends React.Component {
       const jobs = res.data;
       this.setState({
         jobs
+      });
+    });
+  }
+
+  fetchUserJobs() {
+    console.log('Fetching user jobs');
+    let url = `/api/users/jobs`;
+
+    axios.get(url)
+    .then(res => {
+      // console.log(res.data);
+      const userJobs = res.data;
+      this.setState({
+        userJobs
       });
     });
   }
