@@ -13,8 +13,8 @@ from flask import url_for
 
 from applications.authentication import generate
 from applications.authentication import match
-from applications.table import Table
-from applications.user import User
+from applications.database.table import Table
+from applications.models.user import User
 
 
 logger = logging.getLogger(__name__)

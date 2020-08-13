@@ -8,8 +8,8 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 
-from applications.site_checker import get_careers_page
-from applications.table import Table
+from applications.links.site_checker import get_careers_page
+from applications.database.table import Table
 
 
 logger = logging.getLogger(__name__)

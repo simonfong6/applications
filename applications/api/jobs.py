@@ -9,7 +9,7 @@ from flask import jsonify
 from flask import request
 
 from applications.database.unique_id import create_uuid
-from applications.table import Table
+from applications.database.table import Table
 
 
 logger = logging.getLogger(__name__)

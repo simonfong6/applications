@@ -9,7 +9,7 @@ from flask import jsonify
 from flask import request
 from flask import session
 
-from applications.table import Table
+from applications.database.table import Table
 from applications.models import UserJob
 
 
