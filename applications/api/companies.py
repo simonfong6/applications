@@ -8,12 +8,13 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 
-from applications.links.site_checker import get_careers_page
 from applications.database.table import Table
+from applications.links.site_checker import get_careers_page
+from applications.models import Company
+from applications.observability import get_logger
 
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger = get_logger(__name__)
 
 
 companies = Blueprint('companies', __name__)
@@ -21,48 +22,31 @@ companies = Blueprint('companies', __name__)
 
 @companies.route('/')
 def index():
-    companies = []
-
-    table = Table('companies')
-
-    companies = table.get_all()
+    companies = Company.all()
 
     return jsonify(companies)
 
 
 @companies.route('/new', methods=['POST'])
 def create():
-
     data = request.json
+    logger.info(data)
 
-    table = Table('companies')
+    item = {}
+    item['name'] = data['company']
 
-    name = data['company']
+    company = Company.build(item)
 
-    auto_link = get_careers_page(name)
-    
-    logger.info(f"Creating company: '{name}'")
-    table.put({
-        'name': name,
-        'auto_link': auto_link
-    })
+    company.save()
 
-    company = table.get({
-        'name': name
-    })
-
-    return jsonify(company)
+    return company.json()
 
 
-@companies.route('/<company>', methods=['DELETE'])
-def delete(company):
-    table = Table('companies')
+@companies.route('/<name>', methods=['DELETE'])
+def delete(name):
+    Company.delete(name)
 
-    table.delete({
-        'name': company
-    })
-
-    return jsonify({'status': 'deleted'})
+    return {'status': 'deleted'}
 
 
 def main(args):
