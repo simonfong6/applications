@@ -6,15 +6,10 @@ import logging
 
 from flask import Blueprint
 from flask import jsonify
-from flask import redirect
 from flask import request
 from flask import session
-from flask import url_for
 
-from applications.authentication import generate
-from applications.authentication import match
-from applications.database.table import Table
-from applications.models.user import User
+from applications.models import User
 
 
 logger = logging.getLogger(__name__)
@@ -29,103 +24,65 @@ table = Table('users')
 
 @users.route('/')
 def index():
-    users = []
+    users = User.all()
 
-    users = table.get_all()
+    users = [user.json_public() for user in users]
 
     return jsonify(users)
 
 
 @users.route('/new', methods=['POST'])
 def create():
-
     data = request.json
 
-    email = data['email']
-    password = data['password']
+    user = User.build_from_json(data)
 
-    user = table.get({
-        'email': email
-    })
-
-    logger.info(f'User: {user}')
-
-    if user:
+    if user.exists():
         return jsonify({
             'error': 'User with that email already exists.',
             'msg': 'User already exists, please login in.'
         })
 
+    user.save()
 
-    salt, hashcode = generate(password)
-    
-    uuid = User.create_uuid()
-
-    user = {
-        'uuid': uuid,
-        'salt': salt,
-        'email': email,
-        'hash': hashcode
-
-    }
-
-    logger.info(f"Creating user :'{user}'")
-
-    table.put(user)
-
-    return jsonify(user)
+    return jsonify(user.json_public())
 
 
 @users.route('/current')
 def current():
-
     logger.info(f"Session: {session}")
-    email_key = 'email'
 
-    if email_key not in session:
+    if 'email' not in session:
         return jsonify(
             status='No user'
         )
 
-    email = session[email_key]
+    email = session['email']
 
-    user = table.get({
-        'email': email
-    })
+    user = User.find(email)
 
-    # Remove sensitive data.
-    del user['salt']
-    del user['hash']
-
-    return jsonify(user)
+    return jsonify(user.json_public())
 
 
 @users.route('/login', methods=['POST'])
 def login():
+    data = request.json
 
-    if request.json:
-        data = request.json
-        logger.info(data)
+    user = User.build_from_json(data)
 
-    email = data['email']
-    password = data['password']
-    logger.info(f"Logging in email: '{email}'")
+    logger.info(f"Logging in email: '{user.email}'")
 
-    user = table.get({
-        'email': email
-    })
-
-    if not user:
-        logger.info(f"User '{email}' does not exist.")
+    if not user.exists():
+        logger.info(f"User '{user.email}' does not exist.")
         return jsonify({
             'status': 'Failed',
             'msg': 'Email not found, please signup.'
         })
-    
-    salt = user['salt']
-    hashcode = user['hash']
 
-    if not match(password, salt, hashcode):
+    password = data['password']
+    user = User.find(user.email)
+
+    if not user.match(password):
         logger.info('Login failed.')
         return jsonify({
             'status': 'Failed',
@@ -134,7 +91,7 @@ def login():
 
     logger.info('Login successful.')
 
-    session['email'] = email
+    session['email'] = user.email
 
     logger.info(f'Added email to session {session["email"]}')
     return jsonify({
@@ -145,8 +102,15 @@ def login():
 
 @users.route('/logout')
 def logout():
-    # remove the username from the session if it's there
+    if 'email' not in session:
+        return jsonify({
+            'status': 'Not Logged in.',
+            'msg': 'Cannto log out.'
+        })
+
+    # Remove the email from the session if it's there
     session.pop('email', None)
+
     return jsonify({
         'status': 'Logged Out'
     })
