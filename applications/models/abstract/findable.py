@@ -1,27 +1,21 @@
 #!/usr/bin/env python3
 """
-Jsonable
+Findable
 """
-from json import dumps
-
 from .base import Base
+from .buildable import Buildable
 
 
-class Jsonable(Base):
+class Findable(Buildable):
 
-    def __repr__(self):
-        dict_ = self.json()
-        string = dumps(dict_, indent=4, sort_keys=True)
-        repr_string = f"Job({string})"
-        return repr_string
+    @classmethod
+    def find(cls, key):
+        item = cls.table.get({
+            cls.primary_key: key
+        })
 
-    def json(self):
-        item = {}
-
-        for field in self.fields:
-            item[field] = getattr(self, field)
-
-        return item
+        obj = cls.build(item)
+        return obj
 
 
 def main(args):

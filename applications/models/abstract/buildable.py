@@ -1,27 +1,23 @@
 #!/usr/bin/env python3
 """
-Jsonable
+Buildable
 """
-from json import dumps
-
 from .base import Base
 
+class Buildable(Base):
 
-class Jsonable(Base):
+    @classmethod
+    def build(cls, item: dict):
+        if item is None:
+            return None
 
-    def __repr__(self):
-        dict_ = self.json()
-        string = dumps(dict_, indent=4, sort_keys=True)
-        repr_string = f"Job({string})"
-        return repr_string
+        obj = cls.__new__(cls)
 
-    def json(self):
-        item = {}
+        for field in cls.fields:
+            value = item.get(field, None)
+            setattr(obj, field, value)
 
-        for field in self.fields:
-            item[field] = getattr(self, field)
-
-        return item
+        return obj
 
 
 def main(args):

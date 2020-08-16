@@ -1,27 +1,24 @@
 #!/usr/bin/env python3
 """
-Jsonable
+Base
 """
-from json import dumps
+from logging import Logger
+from typing import List
 
-from .base import Base
+from applications.database.table import Table
 
 
-class Jsonable(Base):
+class Base:
 
-    def __repr__(self):
-        dict_ = self.json()
-        string = dumps(dict_, indent=4, sort_keys=True)
-        repr_string = f"Job({string})"
-        return repr_string
+    logger: Logger
+    table: Table
+    primary_key: str
+    fields: List[str]
 
-    def json(self):
-        item = {}
-
+    def __init__(self):
+        # Initialize all fields to None.
         for field in self.fields:
-            item[field] = getattr(self, field)
-
-        return item
+            setattr(self, field, None)
 
 
 def main(args):

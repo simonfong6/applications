@@ -1,27 +1,20 @@
 #!/usr/bin/env python3
 """
-Jsonable
+Deleteable
 """
-from json import dumps
+from applications.database.table import Table
 
 from .base import Base
 
 
-class Jsonable(Base):
+class Deleteable(Base):
 
-    def __repr__(self):
-        dict_ = self.json()
-        string = dumps(dict_, indent=4, sort_keys=True)
-        repr_string = f"Job({string})"
-        return repr_string
-
-    def json(self):
-        item = {}
-
-        for field in self.fields:
-            item[field] = getattr(self, field)
-
-        return item
+    @classmethod
+    def delete(cls, key):
+        cls.logger.info(f"Deleting '{key}'")
+        return cls.table.delete({
+            cls.primary_key: key
+        })
 
 
 def main(args):

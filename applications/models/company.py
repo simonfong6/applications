@@ -52,9 +52,11 @@ class Company(Jsonable):
 
     @classmethod
     def find(cls, key):
-        return cls.table.get({
+        item = cls.table.get({
             cls.primary_key: key
         })
+        obj = cls.build(item)
+        return obj
 
     @classmethod
     def delete(cls, key):

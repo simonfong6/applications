@@ -19,9 +19,6 @@ logger.setLevel(logging.INFO)
 users = Blueprint('users', __name__)
 
 
-table = Table('users')
-
-
 @users.route('/')
 def index():
     users = User.all()

@@ -10,68 +10,44 @@ from flask import request
 
 from applications.database.unique_id import create_uuid
 from applications.database.table import Table
+from applications.models import Company
+from applications.models import Job
+from applications.observability import get_logger
 
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger = get_logger(__name__)
 
 
 jobs = Blueprint('jobs', __name__)
 
 
-table = Table('jobs')
-companies_table = Table('companies')
-
-
 @jobs.route('/')
 def index():
-    jobs = []
+    jobs = Job.all()
 
-    jobs = table.get_all()
-
-    # Attach company info to job.
+    jsonified = []
     for job in jobs:
-        company_name = job['company']
+        company = job.get_company()
+        company_json = company.json()
+        company_json['url'] = company.auto_link
 
-        company = companies_table.get({
-            'name': company_name
-        })
+        job_json = job.json()
+        job_json['company'] = company_json
 
-        url = company.get('auto_link', '')
-        
-        job['company'] = {
-            'name': company_name,
-            'url': url,
-        } 
+        jsonified.append(job_json)
 
-    return jsonify(jobs)
+    return jsonify(jsonified)
 
 
 @jobs.route('/new', methods=['POST'])
 def create():
-
     data = request.json
 
-    uuid = create_uuid()
-    company = data['company']
-    url = data['url']
-    role = data['role']
-    type_ = data['type']
-    
-    logger.info(f"Creating Job: '{url}'")
-    table.put({
-        'uuid': uuid,
-        'company': company,
-        'url': url,
-        'role': role,
-        'type': type_,
-    })
+    job = Job.build(data)
 
-    job = table.get({
-        'uuid': uuid
-    })
+    job.save()
 
-    return jsonify(job)
+    return jsonify(job.json())
 
 
 def main(args):

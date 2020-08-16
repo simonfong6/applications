@@ -1,27 +1,29 @@
 #!/usr/bin/env python3
 """
-Jsonable
+Allable
 """
-from json import dumps
+from applications.database.table import Table
 
 from .base import Base
+from .buildable import Buildable
+from .jsonable import Jsonable
 
 
-class Jsonable(Base):
+class Allable(
+    Buildable,
+    Jsonable
+):
 
-    def __repr__(self):
-        dict_ = self.json()
-        string = dumps(dict_, indent=4, sort_keys=True)
-        repr_string = f"Job({string})"
-        return repr_string
+    @classmethod
+    def all(cls, json=False):
+        items = cls.table.get_all()
 
-    def json(self):
-        item = {}
+        objs = [cls.build(item) for item in items]
 
-        for field in self.fields:
-            item[field] = getattr(self, field)
+        if json:
+            objs = [obj.json() for obj in objs]
 
-        return item
+        return objs
 
 
 def main(args):
