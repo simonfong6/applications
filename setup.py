@@ -18,7 +18,7 @@ setup(
         'bcrypt >= 3.1.7',
         'boto3 >= 1.12.0',
         'flask >= 1.1.1',
-        'flask-cors >= 3.0.8'
+        'flask-cors >= 3.0.8',
         'requests >= 2.24.0',
     ],
     python_requires='>=3.6',
