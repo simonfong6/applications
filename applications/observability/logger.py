@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 """
-User
+Logging
 """
-import uuid
+import logging
+from logging import getLogger
 
-class User:
+LOGGING_LEVEL = logging.INFO
+
+
+def get_logger(name):
+    logger = getLogger(name)
+    logger.setLevel(LOGGING_LEVEL)
+    return logger
+
+
+class Class:
 
     def __init__(self):
         super().__init__()
-
-    @staticmethod
-    def create_uuid():
-        return uuid.uuid4().hex
 
 
 def main(args):

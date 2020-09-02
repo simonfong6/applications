@@ -7,7 +7,7 @@ from decimal import Decimal
 
 from boto3.dynamodb.conditions import Key
 
-from applications.table import Table
+from applications.database.table import Table
 from applications.database.timestamp import micros
 from applications.database.unique_id import create_uuid
 
