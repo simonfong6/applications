@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: applications
-          image: applications:0.1
+          image: applications:0.2
           ports:
             - containerPort: 5000
           env:
