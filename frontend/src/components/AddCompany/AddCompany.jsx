@@ -48,7 +48,7 @@ class AddCompany extends React.Component {
   render() {
     return (
       <div>
-        <h1>AddCompany</h1>
+        <h2>AddCompany</h2>
         <form>
           <div className="form-group">
             <label htmlFor="company">Company</label>
