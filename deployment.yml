@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: applications
+spec:
+  selector:
+    matchLabels:
+      app: applications
+      tier: backend
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: applications
+        tier: backend
+    spec:
+      containers:
+        - name: applications
+          image: applications:0.1
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_APP
+              value: ./applications/server.py
+            - name: FLASK_RUN_HOST
+              value:  0.0.0.0
+            - name: FLASK_ENV
+              value: development
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
