@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: ./applications
+    volumes:
+      - .:/code
+    ports:
+      - 5000:5000
+    environment: 
+      AWS_ACCESS_KEY_ID: $APPLICATIONS_AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $APPLICATIONS_AWS_SECRET_ACCESS_KEY
+      FLASK_SECRET_KEY: $APPLICATIONS_FLASK_SECRET_KEY
+    command: bash -c "pip3 install . && flask run"
+  frontend:
+    build:
+      context: ./frontend
+    volumes: 
+      - ./frontend:/code
+    ports:
+      - 3000:3000
+    # https://github.com/facebook/create-react-app/issues/8688#issuecomment-602110747
+    stdin_open: true
+    command: bash -c "npm install && npm start"
