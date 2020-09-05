@@ -16,7 +16,7 @@ ARG FLASK_SECRET_KEY
 
 ENV FLASK_APP ./applications/server.py
 ENV FLASK_RUN_HOST 0.0.0.0
-ENV FLASK_ENV development
+ENV FLASK_ENV production
 ENV AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID
 ENV AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY
 ENV FLASK_SECRET_KEY $FLASK_SECRET_KEY
@@ -31,7 +31,7 @@ RUN apt-get update && \
   python3 \
   python3-pip
 
-COPY . /code
+COPY ./backend /code
 
 RUN pip3 install .
 

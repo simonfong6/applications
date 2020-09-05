@@ -7,7 +7,7 @@ RUN apt-get update && \
   python3 \
   python3-pip
 
-ENV FLASK_APP ./applications/server.py
+ENV FLASK_APP ./backend/applications/server.py
 ENV FLASK_RUN_HOST 0.0.0.0
 ENV FLASK_ENV development
 ENV AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID
