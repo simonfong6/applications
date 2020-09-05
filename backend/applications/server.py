@@ -10,6 +10,8 @@ from flask import Flask
 from flask_cors import CORS
 
 from applications.api import register_sub_site
+from applications.database.json import CustomJSONEncoder
+
 
 
 # Configure logging.
@@ -22,6 +24,7 @@ app = Flask(
     static_folder='/code/build',  # Serve the React files.
     static_url_path='/'
 )
+app.json_encoder = CustomJSONEncoder
 
 
 FRONTEND_PROXY = 'http://localhost:3000'
