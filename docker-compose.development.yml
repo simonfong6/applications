@@ -2,7 +2,7 @@ version: '3.8'
 services:
   api:
     build:
-      context: ./applications
+      context: ./backend
     volumes:
       - .:/code
     ports:
@@ -11,7 +11,11 @@ services:
       AWS_ACCESS_KEY_ID: $APPLICATIONS_AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY: $APPLICATIONS_AWS_SECRET_ACCESS_KEY
       FLASK_SECRET_KEY: $APPLICATIONS_FLASK_SECRET_KEY
-    command: bash -c "pip3 install . && flask run"
+      MONGO_HOST: $MONGO_HOST
+      MONGO_USERNAME: $MONGO_USERNAME
+      MONGO_PASSWORD: $MONGO_PASSWORD
+      MONGO_DATABASE: applications_dev
+    command: bash -c "pip3 install ./backend && flask run"
   frontend:
     build:
       context: ./frontend
@@ -22,3 +26,17 @@ services:
     # https://github.com/facebook/create-react-app/issues/8688#issuecomment-602110747
     stdin_open: true
     command: bash -c "npm install && npm start"
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $MONGO_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASSWORD
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8000:8081
+    environment:  
+      ME_CONFIG_MONGODB_ADMINUSERNAME: $MONGO_USERNAME
+      ME_CONFIG_MONGODB_ADMINPASSWORD: $MONGO_PASSWORD

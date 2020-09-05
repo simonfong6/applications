@@ -1,27 +1,29 @@
 #!/usr/bin/env python3
 """
-Logging
+Blueprint
 """
-import logging
-from logging import getLogger
+from flask import Blueprint
+from flask import jsonify
 
-LOGGING_LEVEL = logging.INFO
-
-
-def get_logger(name):
-    logger = getLogger(name)
-    logger.setLevel(LOGGING_LEVEL)
-    return logger
+from applications.database import get_flask_database
 
 
-class Class:
+data = Blueprint('data', __name__)
 
-    def __init__(self):
-        super().__init__()
+
+@data.route('/')
+def index():
+    return jsonify({'data': 100})
+
+@data.route('/mongo')
+def mongodb():
+    database = get_flask_database()
+
+
+    return jsonify({'mongo': True})
 
 
 def main(args):
-
     pass
 
 
