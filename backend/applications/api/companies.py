@@ -11,6 +11,7 @@ from pymongo.errors import DuplicateKeyError
 
 from applications.models import Company
 from applications.database import get_flask_database
+from applications.database.seed import MongoSeeder
 from applications.links.site_checker import get_careers_page
 from applications.observability import get_logger
 
@@ -89,6 +90,20 @@ def create():
             'event': 'recreate',
             'message': 'Setting delete to false.',
         })
+
+        found = companies.find_one({
+            'name': name,
+            'deleted': False,
+        })
+
+        # If the document exists and is not deleted.
+        if found is not None:
+            response = {
+                'status': 'error',
+                'error': 'Company name already exists.',
+            }
+            return response
+        
         companies.update_one(
             {
                 'name': name,
@@ -101,8 +116,8 @@ def create():
         )
 
         response = {
-            'status': 'error',
-            'error': 'Company name already exists.',
+            'status': 'recreated',
+            'message': 'Company name already exists, recreating.',
         }
 
     return response
@@ -132,4 +147,14 @@ def delete(name):
         'name': name,
     }
 
+    return response
+
+
+@companies.route('/seed')
+def seed():
+    seeder = MongoSeeder()
+    seeder.seed()
+    response = {
+        'event': 'seeded'
+    }
     return response
