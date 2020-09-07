@@ -32,7 +32,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: $MONGO_USERNAME
       MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASSWORD
-    command: --quiet --logpath=/dev/null
+    command: --quiet --logpath=/dev/null # Turns off the logs.
   mongo-express:
     image: mongo-express
     restart: always
