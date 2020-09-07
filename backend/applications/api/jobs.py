@@ -14,6 +14,7 @@ from applications.database.table import Table
 from applications.models import Company
 from applications.models import Job
 from applications.observability import get_logger
+from applications.observability import log_input_output
 
 
 logger = get_logger(__name__)
@@ -23,6 +24,10 @@ jobs = Blueprint('jobs', __name__)
 
 
 COLLECTION_NAME = 'jobs'
+
+def has_json(request):
+    return hasattr(request, 'json')
+
 
 def get_collection():
     database = get_flask_database()
@@ -39,45 +44,38 @@ def index():
 
     return jsonify(documents)
 
-    jobs = Job.all()
-
-    jsonified = []
-    for job in jobs:
-        company = job.get_company()
-        company_json = company.json()
-        company_json['url'] = company.auto_link
-
-        job_json = job.json()
-        job_json['company'] = company_json
-
-        jsonified.append(job_json)
-
-    return jsonify(jsonified)
-
 
 @jobs.route('/new', methods=['POST'])
+@log_input_output(logger)
 def create():
+    if not has_json(request):
+        return {
+            'error': 'no json payload'
+        }
+
     data = request.json
 
-    job = Job.build(data)
+    # Check if company is in database.
+    database = get_flask_database()
+    companies = database.companies
+    name = data['company']
+    company = companies.find_one({'name': name})
 
-    job.save()
+    if company is None:
+        return {
+            'error': 'no company found',
+            'company': name,
+        }
 
-    return jsonify(job.json())
+    data['company'] = company
 
+    jobs = get_collection()
 
-def main(args):
-    pass
+    inserted_id = jobs.insert_one(data).inserted_id
 
+    data['_id'] = inserted_id
 
-if __name__ == '__main__':
-    from argparse import ArgumentParser
-    parser = ArgumentParser()
-
-    parser.add_argument('-a', '--arg1',
-                        help="An argument.",
-                        type=str,
-                        default='default')
-
-    args = parser.parse_args()
-    main(args)
+    return {
+        'event': 'created job',
+        'job': data,
+    }
