@@ -19,7 +19,9 @@ logger = get_logger(__name__)
 
 FAKER_SEED = 0
 NUM_COMPANIES = 20
-POSSIBLE_TAGS = ['vacation', 'business', 'technology', 'mobility', 'apparel']
+NUM_JOBS = 30
+
+
 fake = Faker('en')
 
 
@@ -58,8 +60,13 @@ class MongoSeeder:
         documents = generate_documents(generate_company, NUM_COMPANIES)
         self.seed_collection('companies', documents)
 
+    def jobs(self):
+        documents = generate_jobs()
+        self.seed_collection('jobs', documents)
+
     def seed(self):
         self.companies()
+        self.jobs()
 
 
 def generate_documents(generator, count):
@@ -70,18 +77,65 @@ def generate_company():
     auto_link = fake.url()
     career_link = fake.url()
     data = {
-        "name": fake.company(),
-        "auto_link": auto_link,
-        "career_link": career_link,
-        "deleted": fake.boolean(chance_of_getting_true=10),
-        "links": {
-            "auto": auto_link,
-            "manual": career_link,
+        'name': fake.company(),
+        'auto_link': auto_link,
+        'career_link': career_link,
+        'deleted': fake.boolean(chance_of_getting_true=10),
+        'links': {
+            'auto': auto_link,
+            'manual': career_link,
         },
-        "createdTime":  fake.date_time(),
+        'createdTime':  fake.date_time(),
     }
 
     return data
+
+
+def generate_job(companies):
+    ROLES = [
+        'Software Engineer',
+        'Product Manager',
+        'Quantative Researcher',
+        'Research Scientist',
+    ]
+    TYPES = [
+        'Fulltime',
+        'Intern',
+        'Contractor',
+    ]
+    TAGS = [
+        'New Grad',
+        'University',
+        'Entry Level',
+        'Infrastructure',
+        'Frontend',
+        'Backend',
+        'Fullstack',
+        'Senior',
+    ]
+
+    tags = fake.random_choices(TAGS)
+    tags = set(tags)
+    tags = list(tags)
+    data = {
+        'company': fake.random_element(companies),
+        'url': fake.url(),
+        'role': fake.random_element(ROLES),
+        'type': fake.random_element(TYPES),
+        'tags': tags,
+    }
+
+    return data
+
+
+def generate_jobs():
+    database = get_database()
+    collection = database['companies']
+    cursor = collection.find({})
+    companies = [doc for doc in cursor]
+
+    return [generate_job(companies) for _ in range(NUM_JOBS)]
+
 
 def seed():
     MongoSeeder().seed()

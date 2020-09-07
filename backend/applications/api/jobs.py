@@ -8,6 +8,7 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 
+from applications.database import get_flask_database
 from applications.database.unique_id import create_uuid
 from applications.database.table import Table
 from applications.models import Company
@@ -21,8 +22,23 @@ logger = get_logger(__name__)
 jobs = Blueprint('jobs', __name__)
 
 
+COLLECTION_NAME = 'jobs'
+
+def get_collection():
+    database = get_flask_database()
+    return database[COLLECTION_NAME]
+
+
 @jobs.route('/')
 def index():
+    jobs = get_collection()
+    cursor = jobs.find({
+        'deleted': {"$ne": True}
+    })
+    documents = [document for document in cursor]
+
+    return jsonify(documents)
+
     jobs = Job.all()
 
     jsonified = []
