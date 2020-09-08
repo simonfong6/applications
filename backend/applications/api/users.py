@@ -10,10 +10,11 @@ from flask import request
 from flask import session
 
 from applications.models import User
+from applications.observability import get_logger
+from applications.observability import log_input_output
 
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger = get_logger(__name__)
 
 
 users = Blueprint('users', __name__)
