@@ -12,7 +12,7 @@ spec:
       targetPort: 5000
   externalIPs:
     - 192.168.64.2  # Minikube on Mac.
-    - 172.17.0.4    # Minikube on AWS.
+    - 172.17.0.2    # Minikube on AWS.
   selector:
     app: applications
     tier: backend
